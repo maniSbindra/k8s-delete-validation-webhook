@@ -31,9 +31,7 @@ docker-build-local:
 docker-push:
 	docker push $(CONTAINER_NAME):$(CONTAINER_VERSION)
 
-tmp:
-	WEBHOOK_TLS_CERT=$$(tr '\n' '?' <  server-cert.pem | sed 's/?/?     /g') && echo $$WEBHOOK_TLS_CERT && cat deployments/webhook-k8s-resources.template.yaml | sed 's~\$${WEBHOOK_TLS_CERT}~'"$$WEBHOOK_TLS_CERT"'~g' 
-
+# This generates the actual kubernetes manifests using the manifest template. First using the conntection to the kubernetes cluster certificate and key are generated for the the webook. Then the certificate, key and manifest values are injected into the kubernetes manifest template (deployments/webhook-k8s-resources.template.yaml) to get the actual kubernetes manifest (deployments/webhook-k8s-resources.yaml). Once this kubernetes manifest is applied, the solution is deployed to the cluster ( Assuming that the container image is already present in the container registry mentioned in this Makefile's variable configuration)
 gen-k8s-manifests:
 	if [ -f create-signed-cert.sh ]; then rm create-signed-cert.sh ; fi
 	if [ -f csr.conf ]; then rm csr.conf ; fi
