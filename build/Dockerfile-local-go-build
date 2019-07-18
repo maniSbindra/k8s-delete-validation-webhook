@@ -1,0 +1,6 @@
+FROM alpine:latest
+
+ADD internal/k8s-delete-validation-webhook/k8s-delete-validation-webhook /k8s-delete-validation-webhook
+
+
+ENTRYPOINT ["/k8s-delete-validation-webhook", "webhook"]

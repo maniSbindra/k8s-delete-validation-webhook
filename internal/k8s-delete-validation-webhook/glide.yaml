@@ -1,0 +1,28 @@
+package: github.com/manisbindra/k8s-delete-validation-webhook
+import:
+- package: github.com/pkg/errors
+  version: ^0.8.1
+- package: github.com/sirupsen/logrus
+  version: ^1.4.2
+- package: github.com/spf13/cobra
+  version: ^0.0.5
+- package: github.com/spf13/viper
+  version: ^1.4.0
+- package: k8s.io/api
+  subpackages:
+  - admission/v1beta1
+  - admissionregistration/v1beta1
+  - apps/v1
+  - batch/v1
+  - batch/v1beta1
+  - core/v1
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+  - pkg/runtime
+  - pkg/runtime/serializer
+- package: k8s.io/client-go
+  version: ^12.0.0
+  subpackages:
+  - kubernetes
+  - rest

@@ -1,0 +1,16 @@
+/internal/k8s-delete-validation-webhook/k8s-delete-validation-webhook
+vendor
+test/webhook.yaml
+test/webhook-prefix.yaml
+test/*.csr
+test/*.key
+test/dind-cluster-v*.sh
+.DS_Store
+glideyaml
+csr.conf
+server.csr
+create-signed-cert.sh
+server-cert.pem
+server-key.pem
+deployments/webhook-k8s-resources.yaml
+deployments/webhook-k8s-resources copy.yaml
