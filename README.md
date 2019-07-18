@@ -11,3 +11,5 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
 ## Key Functions of webhook implementation
 
 ## Installation / deployment
+
+## Configuring the namespaces, resources and labels
