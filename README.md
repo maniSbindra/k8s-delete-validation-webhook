@@ -56,7 +56,7 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
   ```
 * Create Deployment with deleteLock=enabled label
   ```sh
-  kl run niginx --image=nginx --port=80 --labels=deleteLock=enabled
+  kubectl run niginx --image=nginx --port=80 --labels=deleteLock=enabled
   ```
 * Trying to delete this deployment should throw following error
   ```sh
