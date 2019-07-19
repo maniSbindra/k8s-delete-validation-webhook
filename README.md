@@ -46,8 +46,25 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
   ```
 * Apply the yaml
   ```sh
-  kl apply -f deployments/webhook-k8s-resources.yaml
+  kubectl apply -f deployments/webhook-k8s-resources.yaml
   ```
+
+## Verify installation
+* Check the deployment k8s-delete-validation-webhook, for which a pod should be running
+  ```sh
+  kubectl get deploy k8s-delete-validation-webhook
+  ```
+* Create Deployment with deleteLock=enabled label
+  ```sh
+  kl run niginx --image=nginx --port=80 --labels=deleteLock=enabled
+  ```
+* Trying to delete this deployment should throw following error
+  ```sh
+  kubectl delete deploy nginx
+  Error from server: admission webhook "k8s-deletion-validation-webhook.test.com" denied the request: The deployment cannot be deleted as deletions are locked for this deployment
+  ```
+
+
 
 ## Configuring the namespaces, resources and labels
 * By modifying the [**rules section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L100-L103) of the validatingwebhookconfiguration resource we can change the namespaces, api groups, api versions and resource types which this webhook handles.
