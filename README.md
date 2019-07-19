@@ -27,6 +27,31 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
 * The makefile target **make gen-k8s-manifests** in this solution has all steps to replace values in the template, and as an output it generates the deployments/webhook-k8s-resources.yaml which has certificate, key and the ca bundle in the yaml. To execute this make target **you need to have access to the target kubernets** cluster (KUBECONFIG or ./kube/config). Before running the make target, verify that the values of the **CONTAINER_NAME, CONTAINER_VERSION, WEBHOOK_NAMESPACE and WEBHOOK_SERVICE_NAME** in the Makefile are correct.  
 * After this applying the generated **deployments/webhook-k8s-resources.yaml** file creates all required kubernetes resources. By default entry for this generated file is in the .gitignore file.
 
+### Commands
+* Clone the repo
+  ```sh
+  git clone https://github.com/maniSbindra/k8s-delete-validation-webhook.git
+  cd k8s-delete-validation-webhook
+  ```
+* Modify Makefile values for **CONTAINER_NAME, CONTAINER_VERSION, WEBHOOK_NAMESPACE and WEBHOOK_SERVICE_NAME**
+* Make sure you are logged in to the container registry and have access to the kubernetes cluster
+* Build and Push container image
+  ```sh
+  make docker-build
+  make docker-push
+  ```
+* Generate certs, keys and generate actual yaml from yaml template.
+  ```sh
+  make gen-k8s-manifests
+  ```
+* Apply the yaml
+  ```sh
+  kl apply -f deployments/webhook-k8s-resources.yaml
+  ```
+
 ## Configuring the namespaces, resources and labels
 * By modifying the [**rules section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L100-L103) of the validatingwebhookconfiguration resource we can change the namespaces, api groups, api versions and resource types which this webhook handles.
 * By modifying the [**environment settings**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L48-L53) of the webhook deployment, we can control the delete rejection message, and the key and value of the label used to determine if resource deletion requests are rejected
+
+
+
