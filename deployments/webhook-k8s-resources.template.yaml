@@ -107,7 +107,7 @@ webhooks:
         webhook: enabled
 ---
 # ClusterRole and ClusterRoleBinding are required only for ingress validation.
-# Service account permissions are needed to read the cluster ingresses from all namespaces for the validation
+# Service account permissions are needed to read the cluster ingresses from all namespaces for the validation.
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
