@@ -100,8 +100,33 @@ webhooks:
       - operations: ["DELETE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
-        resources: ["deployments","DebugAttachments","debugattachments"]
+        resources: ["deployments"]
     failurePolicy: Fail
     namespaceSelector:
       matchLabels:
         webhook: enabled
+---
+# ClusterRole and ClusterRoleBinding are required only for ingress validation.
+# Service account permissions are needed to read the cluster ingresses from all namespaces for the validation
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k8s-delete-validation-webhook
+rules:
+  - apiGroups: ["*"]
+    resources: ["deployments"]
+    verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-delete-validation-webhook-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-delete-validation-webhook
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
