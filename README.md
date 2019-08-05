@@ -60,7 +60,7 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
   ```
 * Create Deployment with deleteLock=enabled label
   ```sh
-  kubectl run niginx --image=nginx --port=80 --labels=deleteLock=enabled
+  kubectl run nginx --image=nginx --port=80 --labels=deleteLock=enabled
   ```
 * Trying to delete this deployment should throw following error
   ```sh
@@ -71,7 +71,7 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
 
 
 ## Configuring the namespaces, resources and labels
-* By modifying the [**rules section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L100-L103) of the validatingwebhookconfiguration resource we can change the namespaces, api groups, api versions and resource types which this webhook handles.
+* By modifying the [**rules section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L100-L103) of the validatingwebhookconfiguration resource we can change the namespaces, api groups, api versions and resource types which this webhook handles. We also need to change the namespaces, and resource permissions for the cluster role in the [**Cluster Role and Binding section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L111-L132) 
 * By modifying the [**environment settings**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L48-L53) of the webhook deployment, we can control the delete rejection message, and the key and value of the label used to determine if resource deletion requests are rejected
 * You need to add the label specified in [**the namespace selector**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/9f86e415d4365c66f484e5a543935e950f3026a1/deployments/webhook-k8s-resources.template.yaml#L107) to any namespace where you expect the webhook to perform the validation
 
