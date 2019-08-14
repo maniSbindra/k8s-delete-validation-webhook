@@ -87,7 +87,7 @@ func startWebhook(cmd *cobra.Command, args []string) {
 	}
 }
 
-func getResourceLabels(clientSet *kubernetes.Clientset, resourceNamespace string, resourceName string, resourceAPIGroup string, resourceAPIVersion string, resourceKind string) (map[string]string, error) {
+func getResourceLabels(clientSet *kubernetes.Clientset, ar v1beta1.AdmissionReview) (map[string]string, error) {
 
 	type ResourceData struct {
 		Metadata struct {
@@ -95,8 +95,12 @@ func getResourceLabels(clientSet *kubernetes.Clientset, resourceNamespace string
 		}
 	}
 
-	resourceKindAPIString := strings.ToLower(resourceKind) + "s"
-	resourceAPIRequest := "apis/" + resourceAPIGroup + "/" + resourceAPIVersion + "/namespaces/" + resourceNamespace + "/" + resourceKindAPIString + "/" + resourceName
+	var resourceAPIRequest string
+	if ar.Request.Kind.Group != "" {
+		resourceAPIRequest = fmt.Sprintf("apis/%s/%s/namespaces/%s/%s/%s", ar.Request.Kind.Group, ar.Request.Kind.Version, ar.Request.Namespace, ar.Request.Resource.Resource, ar.Request.Name)
+	} else {
+		resourceAPIRequest = fmt.Sprintf("api/%s/namespaces/%s/%s/%s", ar.Request.Kind.Version, ar.Request.Namespace, ar.Request.Resource.Resource, ar.Request.Name)
+	}
 
 	jsonData, err := clientSet.RESTClient().Get().AbsPath(resourceAPIRequest).DoRaw()
 	var resourceData ResourceData
@@ -127,7 +131,7 @@ func validate(ar v1beta1.AdmissionReview, config *config, clientSet *kubernetes.
 	resourceDeletionLockLabelKey := config.DeploymentDeletionLockLabelKey
 	resourceDeletionLockLabelValue := config.DeploymentDeletionLockLabelValue
 
-	resourceLabels, labelFetchError = getResourceLabels(clientSet, ar.Request.Namespace, ar.Request.Name, ar.Request.Kind.Group, ar.Request.Kind.Version, ar.Request.Kind.Kind)
+	resourceLabels, labelFetchError = getResourceLabels(clientSet, ar)
 	if labelFetchError != nil {
 		log.Error(labelFetchError)
 		return toAdmissionResponse(labelFetchError)
