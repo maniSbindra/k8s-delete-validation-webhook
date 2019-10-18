@@ -16,9 +16,9 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
 * The avast solution has been referenced for the initialization / configuration of this application (using cobra, viper etc). The script to generate the certificate key files has also been referenced
 
 ## Key Functions of webhook implementation
-* webhook.go->validate : This operation receives the AdmissionReview request object from Kubernetes. It then extracts the name of the resource to be deleted, the namespace, the API group, the API version, and the resource type. These are then passed to the getResourceLabels Operations. The labels are then passed to the validate.go->isDeletionRequestToBeBlocked operation to check if the deletion is to be blocked
-* webhook.go->getResourceLabels : This operation uses the REST client to fetch the labels for resource and returns the map or labels
-* validate.go->isDeletionRequestToBeBlocked : This checks if the resource labels indicate that the resource is to be deleted or not.
+* [**webhook.go->validate**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/9f86e415d4365c66f484e5a543935e950f3026a1/internal/k8s-delete-validation-webhook/webhook.go#L120) : This operation receives the AdmissionReview request object from Kubernetes. It then extracts the name of the resource to be deleted, the namespace, the API group, the API version, and the resource type. These are then passed to the getResourceLabels Operations. The labels are then passed to the [**validate.go->isDeletionRequestToBeBlocked**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/9f86e415d4365c66f484e5a543935e950f3026a1/internal/k8s-delete-validation-webhook/validate.go#L3) operation to check if the deletion is to be blocked
+* [**webhook.go->getResourceLabels**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/9f86e415d4365c66f484e5a543935e950f3026a1/internal/k8s-delete-validation-webhook/webhook.go#L90) : This operation uses the REST client to fetch the labels for resource and returns the map or labels
+* [**validate.go->isDeletionRequestToBeBlocked**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/9f86e415d4365c66f484e5a543935e950f3026a1/internal/k8s-delete-validation-webhook/validate.go#L3) : This checks if the resource labels indicate that the resource is to be deleted or not.
 
 ## Installation
 * **Building and Pushing the container image** :The **Make target docker-build or docker-build-local** can be used to create the container image. The **make docker-push**  makefile target can be used to push the container image to the container registry. With the **make docker-build-local** makefile target you need dependencies like glide on your machine, the **make docker-build** makefile target uses a multi stage build for building the go binary. Make sure you change the values of **CONTAINER_NAME**, **CONTAINER_VERSION** in the Make file.
@@ -31,7 +31,6 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
 * Clone the repo
   ```sh
   git clone https://github.com/maniSbindra/k8s-delete-validation-webhook.git
-  cd k8s-delete-validation-webhook
   ```
 * Modify Makefile values for **CONTAINER_NAME, CONTAINER_VERSION, WEBHOOK_NAMESPACE and WEBHOOK_SERVICE_NAME**
 * Make sure you are logged in to the container registry and have access to the kubernetes cluster
