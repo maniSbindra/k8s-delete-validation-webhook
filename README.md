@@ -1,5 +1,19 @@
-# Kubernetes resource deletion validation webhook
+---
+title: Kubernetes resource deletion validation webhook
+description: AdmissionControl validating webhook to block deletion of resources based on resource labels.
+ms.date: 2026-01-10
+---
+
+## Overview
+
 AdmissionControl validating webhook to block deletion of resources based on resource labels.
+
+## Talk
+
+This repo was created as a companion to the talk.
+
+* Kubernetes Forum (2020): Creating and Debugging Kubernetes Admission Webhooks
+* Recording: https://www.youtube.com/watch?v=d0Yq5vU_maQ
 
 ## What this solution does
 For Configured Kubernetes namespaces and resources (deployments, crds etc) deletion requests are first processed by this webhook, and based on labels associated with the resource the resource deletion requests (kubectl delete resource .) are either rejected or allowed. The label keys and values for which resource deletion requests are rejected can also be configured.
@@ -66,8 +80,6 @@ For Configured Kubernetes namespaces and resources (deployments, crds etc) delet
   kubectl delete deploy nginx
   Error from server: admission webhook "k8s-deletion-validation-webhook.test.com" denied the request: The deployment cannot be deleted as deletions are locked for this deployment
   ```
-
-
 
 ## Configuring the namespaces, resources and labels
 * By modifying the [**rules section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/12d9aacc757b6c6208e47618e7282ad623eb05b8/deployments/webhook-k8s-resources.template.yaml#L100-L103) of the validatingwebhookconfiguration resource we can change the namespaces, api groups, api versions and resource types which this webhook handles. We also need to change the namespaces, and resource permissions for the cluster role in the [**Cluster Role and Binding section**](https://github.com/maniSbindra/k8s-delete-validation-webhook/blob/a4fde8f34445fed1cbfd44a5bf157d235cd603e5/deployments/webhook-k8s-resources.template.yaml#L111-L132) 
